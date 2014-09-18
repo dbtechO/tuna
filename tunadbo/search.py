@@ -15,13 +15,6 @@
 # limitations under the License.
 #
 import webapp2
-from calc import *
 
-class MainHandler(webapp2.RequestHandler):
+class SearchHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Serves HTML [depricated]')
-
-app = webapp2.WSGIApplication([
-    ('/calc', CalcHandler),
-    ('/', MainHandler),
-], debug=True)
