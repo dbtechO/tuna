@@ -15,7 +15,8 @@
 # limitations under the License.
 #
 import webapp2
-
+#from lyrics import *
 class CalcHandler(webapp2.RequestHandler):
     def get(self):
+    	self.response.write(self.request.get('song')+"\t")
         self.response.write('Serves HTML [depricated]')

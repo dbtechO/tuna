@@ -15,6 +15,12 @@
 # limitations under the License.
 #
 import webapp2
+from lyrics import *
 
 class SearchHandler(webapp2.RequestHandler):
     def get(self):
+    	song = self.request.get('song')
+    	self.response.write('Serves HTML [depricated]')
+    	output = lyrics.getLyrics("http://www.azlyrics.com/lyrics/kendricklamar/goodkid.html")
+    	self.response.write(str(lyrics.arbitraryScale(output)))
+

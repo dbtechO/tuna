@@ -16,6 +16,7 @@
 #
 import webapp2
 from calc import *
+from search import *
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -23,5 +24,6 @@ class MainHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/calc', CalcHandler),
-    ('/', MainHandler),
+    ('/', MainHandler), 
+    ('/search', SearchHandler),
 ], debug=True)
