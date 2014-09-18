@@ -18,18 +18,50 @@ class lyrics:
 				lyrics = True
 		return output
 	#implemented from the AZlyrics search function
-	def search(keywords):
-		stri
-		query = "http://search.azlyrics.com/search.php?q="+string
-		fille = urlib2.urlopen(url)
-		output = []
-		for line in fille:
+	def search(self, keywords):
+		query = "http://search.azlyrics.com/search.php?q="+keywords
+		page = urllib2.urlopen(query)
+		output = {}
+		key = ""
+		temp = []
+		results = False
+		for line in page:
 			if "no results." in line:
 				output.append("no results")
 				break;
+			if "Artist results" in line:
+				if len(temp) > 0:
+					output[key] = temp
+				temp = []
+				key = "artist"
+				results = True
+			elif "Album results" in line:
+				if len(temp) > 0:
+					output[key] = temp
+				temp = []
+				key = "album"
+				results = True
+			elif "Song results" in line:
+				if len(temp) > 0:
+					output[key] = temp
+				temp = []
+				key = "song"
+				results = True
+			if results:
+				if "<a href" in line and "lyrics" in line:
+					firstIdx = line.index("\"") +1
+					secIdx = line.find("\"", firstIdx)
+					temp.append(line[firstIdx:secIdx])
+		if len(temp) > 0:
+			output[key] = temp
+		for key in output:
+			print key +"=> key"
+			for k in output[key]:
+				print k
+		return output
 
 	def replace(string):
-		chars = ["<br />\n", "<i>", "</i>"]
+		chars = ["<br />\n", "<i>", "</i>", "<a href =\""]
 		for char in chars:
 			string = string.replace(char, "")
 		return string
@@ -42,4 +74,5 @@ class lyrics:
 	def test():
 		lyrics = getLyrics("http://www.azlyrics.com/lyrics/kendricklamar/goodkid.html")
 		print arbitraryScale(lyrics)
+
 
