@@ -18,4 +18,4 @@ import webapp2
 
 class CalcHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Serves HTML [depricated]')
+        self.response.write(self.request.get('song'))
