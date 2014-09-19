@@ -68,7 +68,23 @@ class lyrics:
 		line = lyrics.formatSearch(searchline)
 		query = "http://www.songlyrics.com/index.php?section=search&searchW="+line+"&submit=Search"
 		webpage = urllib2.urlopen(query)
-		return webpage
+		#Make sure it is not reading unecessailry
+		reading = False
+		output = {}
+		for line in webpage:
+			if "<div class=\"coltwo-wide-2\">" in line:
+				reading = True
+			if reading and "<a href" in line and "<img" in line and "title" in line:
+				idx = line.find("href=\"")+len("href=\"")
+				link = line[idx:line.find('\"',idx)]
+				idx = line.find("title=\"", idx) +len("title=\"")
+				title = line[idx:line.find('\"',idx)]
+				title =title.replace("\r", "")
+				output[title] = link
+			if "<! --end coltwo-center-->" in line:
+				print "break"
+				break;
+		return output
 	@staticmethod
 	def formatSearch(query):
 		while " " in query:
@@ -100,3 +116,4 @@ class lyrics:
 		lyrics = getLyrics("www.azlyrics.com/lyrics/kanyewest/canttellmenothing.html")
 		print arbitraryScale(lyrics)
 #lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
+print lyrics.search("kendrick lamar")
