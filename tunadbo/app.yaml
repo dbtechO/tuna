@@ -26,6 +26,10 @@ handlers:
   static_files: search.html
   upload: search\.html
 
+- url: /song
+  static_files: song.html
+  upload: song\.html
+
 
 - url: /client\.js
   static_files: client.js
