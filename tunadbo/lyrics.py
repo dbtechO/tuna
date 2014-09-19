@@ -1,22 +1,26 @@
 #lyrics grabber test
-from google.appengine.api import urlfetch
+#from google.appengine.api import urlfetch
+import urllib2
 class lyrics:
 	@staticmethod
 	def getLyrics(url):
+		#urllib2
+		webpage = urllib2.urlopen(url)
+		'''urlfetch method
 		server = urlfetch.fetch(url)
 		webpage = server.content
+		'''
 		output = []
-		lyrics = False
+		lyrs = False
 		for line in webpage:
-			if "<!-- end of lyrics -->" in line:
-				lyrics = False
+			if lyrs and "</div>" in line:
 				break;
-			if lyrics and line is not None:
-				line = replace(line)
+			if lyrs and line is not None:
+				line = lyrics.replace(line)
 				output.append(line)
 				print output[-1]
-			if "<!-- start of lyrics" in line:
-				lyrics = True
+			if (not lyrs) and "id=\"songLyricsDiv-outer\"" in line:
+				lyrs = True
 		return output
 	#implemented from the AZlyrics search function
 	def search(self, keywords):
@@ -60,11 +64,20 @@ class lyrics:
 			for k in output[key]:
 				print k
 		return output
-
+	@staticmethod
 	def replace(string):
-		chars = ["<br />\n", "<i>", "</i>", "<a href =\""]
+		chars = ["<a href =\"", "\n"]
+		iterator = 0
+		endchar = 0
 		for char in chars:
 			string = string.replace(char, "")
+		while iterator < len(string):
+			if string[iterator] == "<":
+				endchar = string.find(">")
+				if endchar != -1:
+					string = string[:iterator]+string[endchar+1:]
+					iterator-=1
+			iterator+=1
 		return string
 	def arbitraryScale(lyrics):
 		count = 0
@@ -75,3 +88,4 @@ class lyrics:
 	def test():
 		lyrics = getLyrics("www.azlyrics.com/lyrics/kanyewest/canttellmenothing.html")
 		print arbitraryScale(lyrics)
+lyrics.getLyrics("http://www.songlyrics.com/yg/my-nigga-lyrics/")
