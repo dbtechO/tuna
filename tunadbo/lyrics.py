@@ -22,7 +22,7 @@ class lyrics:
 				lyrs = True
 		return output
 	#implemented from the AZlyrics search function
-	def search(self, keywords):
+	def searchAz(self, keywords):
 		query = "http://search.azlyrics.com/search.php?q="+keywords
 		page = "asd"
 		output = {}
@@ -64,6 +64,17 @@ class lyrics:
 				print k
 		return output
 	@staticmethod
+	def search(searchline):
+		line = lyrics.formatSearch(searchline)
+		query = "http://www.songlyrics.com/index.php?section=search&searchW="+line+"&submit=Search"
+		webpage = urllib2.urlopen(query)
+		return webpage
+	@staticmethod
+	def formatSearch(query):
+		while " " in query:
+			query = query.replace(" ", "+")
+		return query
+	@staticmethod
 	def replace(string):
 		chars = ["<a href =\"", "\n"]
 		iterator = 0
@@ -88,4 +99,4 @@ class lyrics:
 	def test():
 		lyrics = getLyrics("www.azlyrics.com/lyrics/kanyewest/canttellmenothing.html")
 		print arbitraryScale(lyrics)
-lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
+#lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
