@@ -22,6 +22,11 @@ handlers:
   static_files: index.html
   upload: index\.html
 
+- url: /search
+  static_files: search.html
+  upload: search\.html
+
+
 - url: /client\.js
   static_files: client.js
   upload: client\.js

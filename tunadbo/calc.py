@@ -21,5 +21,4 @@ class CalcHandler(webapp2.RequestHandler):
     def get(self):
     	song = self.request.get('song')
     	self.response.write('Serves HTML [depricated]')
-    	output = urlfetch.fetch('http://www.songlyrics.com/').content
-    	self.response.write(output)
+    	self.response.write('asd')
