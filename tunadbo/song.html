@@ -72,6 +72,10 @@
         if(song != undefined){
           document.getElementById("stile").innerHTML = song;
         }
+        else{
+          document.getElementById("stile").innerHTML = "Error! :(";
+          document.getElementById("sinfo").innerHTML = "Sorry! It looks like we can't catch any tuna right now; you may have an invalid song address. Please try again later.";
+        }
       }
 
       window.onload = getSong();
