@@ -15,7 +15,6 @@
 # limitations under the License.
 #
 import webapp2
-from calc import *
 from search import *
 from song import *
 
