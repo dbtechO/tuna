@@ -22,8 +22,13 @@ class SongHandler(webapp2.RequestHandler):
     def get(self):
     	self.response.headers['Content-Type'] = 'application/json'
     	query = self.request.get('query')
-    	output = lyrics.getLyrics('http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/')
-    	obj = {
+    	serResults = lyrics.search(query)
+    	for key in serResults:
+    		link = serResults[key]
+    		self.response.out.write("Song: "+key+" ")
+    		self.response.out.write("Artist: "+lyrics.getArtist(link)+" ")
+    		self.response.out.write("Scale: "+ str(lyrics.arbitraryScale(link))+"\n")
+    	'''obj = {
     		'query': query,
     		'scale': lyrics.arbitraryScale(output), 
     		'payload':'some var', 
@@ -32,5 +37,5 @@ class SongHandler(webapp2.RequestHandler):
     	
     	self.response.write('Serves HTML [depricated]')
     	output = lyrics.getLyrics('http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/')
-    	#self.response.write(str(lyrics.arbitraryScale(output)))
+    	'''#self.response.write(str(lyrics.arbitraryScale(output)))
 

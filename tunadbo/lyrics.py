@@ -64,6 +64,16 @@ class lyrics:
 				print k
 		return output
 	@staticmethod
+	def getArtist(url):
+		webpage = urllib2.urlopen(url)
+		reading = False
+		artist = ""
+		for line in webpage:
+			if "Artist: " in line:
+				artist = lyrics.replace(line, False)
+				artist = artist[artist.find(":")+2:]
+		return artist
+	@staticmethod
 	def search(searchline):
 		line = lyrics.formatSearch(searchline)
 		query = "http://www.songlyrics.com/index.php?section=search&searchW="+line+"&submit=Search"
@@ -85,18 +95,22 @@ class lyrics:
 				print "break"
 				break;
 		return output
+
 	@staticmethod
 	def formatSearch(query):
 		while " " in query:
 			query = query.replace(" ", "+")
 		return query
 	@staticmethod
-	def replace(string):
+	def replace(string, ahref = True):
 		chars = ["<a href =\"", "\n"]
 		iterator = 0
 		endchar = 0
-		for char in chars:
-			string = string.replace(char, "")
+		if ahref:
+			for char in chars:
+				string = string.replace(char, "")
+		else:
+			string = string.replace(chars[1], "")
 		while iterator < len(string):
 			if string[iterator] == "<":
 				endchar = string.find(">")
@@ -109,11 +123,9 @@ class lyrics:
 	def arbitraryScale(lyrics):
 		count = 0
 		for line in lyrics:
-			if "gas" in line.lower():
+			if "chicago" in line.lower():
 				count +=1
 		return count
-	def test():
-		lyrics = getLyrics("www.azlyrics.com/lyrics/kanyewest/canttellmenothing.html")
-		print arbitraryScale(lyrics)
 #lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
-print lyrics.search("kendrick lamar")
+#print lyrics.search("kendrick lamar")
+print lyrics.getArtist("http://www.songlyrics.com/kendrick-lamar/poetic-justice-lyrics/")
