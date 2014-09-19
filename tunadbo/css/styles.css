@@ -1,0 +1,5 @@
+@media (max-width: 768px){
+  .navbar-nav li{
+    text-align: center;
+  }
+}
