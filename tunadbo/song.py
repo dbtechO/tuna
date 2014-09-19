@@ -20,14 +20,14 @@ import json
 
 class SongHandler(webapp2.RequestHandler):
     def get(self):
-    	self.response.headers['Content-Type'] = 'application/json'
-    	query = self.request.get('query')
-    	serResults = lyrics.search(query)
-    	for key in serResults:
-    		link = serResults[key]
-    		self.response.out.write("Song: "+key+" ")
-    		self.response.out.write("Artist: "+lyrics.getArtist(link)+" ")
-    		self.response.out.write("Scale: "+ str(lyrics.arbitraryScale(link))+"\n")
+        self.response.headers['Content-Type'] = 'application/json'
+        idd = self.request.get('id')
+        url = 'http://www.songlyrics.com/'+idd+'/'
+
+
+        self.response.out.write("Song: "+idd+" ")
+        self.response.out.write("Artist: "+lyrics.getArtist(url)+" ")
+        self.response.out.write("Scale: "+ str(lyrics.arbitraryScale(url))+"\n")
     	'''obj = {
     		'query': query,
     		'scale': lyrics.arbitraryScale(output), 
