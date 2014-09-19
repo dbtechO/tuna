@@ -123,7 +123,7 @@ class lyrics:
 	def arbitraryScale(lyrics):
 		count = 0
 		for line in lyrics:
-			if "chicago" in line.lower():
+			if "nigga" in line.lower():
 				count +=1
 		return count
 #lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
