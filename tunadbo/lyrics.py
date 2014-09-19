@@ -120,9 +120,10 @@ class lyrics:
 			iterator+=1
 		return string
 	@staticmethod
-	def arbitraryScale(lyrics):
+	def arbitraryScale(url):
+		lyrs = lyrics.getLyrics(url)
 		count = 0
-		for line in lyrics:
+		for line in lyrs:
 			if "nigga" in line.lower():
 				count +=1
 		return count
