@@ -24,8 +24,7 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write('Serves HTML [depricated]')
 
 app = webapp2.WSGIApplication([
-    ('/calc', CalcHandler),
     ('/', MainHandler), 
-    ('/search', SearchHandler),
-    ('/song', SongHandler)
+    ('/api/search', SearchHandler),
+    ('/api/song', SongHandler)
 ], debug=True)
