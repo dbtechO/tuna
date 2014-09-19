@@ -18,7 +18,6 @@ class lyrics:
 			if lyrs and line is not None:
 				line = lyrics.replace(line)
 				output.append(line)
-				print output[-1]
 			if (not lyrs) and "id=\"songLyricsDiv-outer\"" in line:
 				lyrs = True
 		return output
@@ -79,13 +78,14 @@ class lyrics:
 					iterator-=1
 			iterator+=1
 		return string
+	@staticmethod
 	def arbitraryScale(lyrics):
 		count = 0
 		for line in lyrics:
-			if "kid" in line.lower():
+			if "gas" in line.lower():
 				count +=1
 		return count
 	def test():
 		lyrics = getLyrics("www.azlyrics.com/lyrics/kanyewest/canttellmenothing.html")
 		print arbitraryScale(lyrics)
-lyrics.getLyrics("http://www.songlyrics.com/yg/my-nigga-lyrics/")
+lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
