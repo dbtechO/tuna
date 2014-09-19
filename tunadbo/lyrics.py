@@ -1,9 +1,10 @@
 #lyrics grabber test
-import urllib2
+from google.appengine.api import urlfetch
 class lyrics:
 	@staticmethod
 	def getLyrics(url):
-		webpage = urllib2.urlopen(url)
+		server = urlfetch.fetch(url)
+		webpage = server.content
 		output = []
 		lyrics = False
 		for line in webpage:
@@ -20,7 +21,7 @@ class lyrics:
 	#implemented from the AZlyrics search function
 	def search(self, keywords):
 		query = "http://search.azlyrics.com/search.php?q="+keywords
-		page = urllib2.urlopen(query)
+		page = "asd"
 		output = {}
 		key = ""
 		temp = []
@@ -72,7 +73,5 @@ class lyrics:
 				count +=1
 		return count
 	def test():
-		lyrics = getLyrics("http://www.azlyrics.com/lyrics/kendricklamar/goodkid.html")
+		lyrics = getLyrics("www.azlyrics.com/lyrics/kanyewest/canttellmenothing.html")
 		print arbitraryScale(lyrics)
-
-

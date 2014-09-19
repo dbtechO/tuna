@@ -15,8 +15,11 @@
 # limitations under the License.
 #
 import webapp2
-#from lyrics import *
+from google.appengine.api import urlfetch
+from lyrics import *
 class CalcHandler(webapp2.RequestHandler):
     def get(self):
-    	self.response.write(self.request.get('song')+"\t")
-        self.response.write('Serves HTML [depricated]')
+    	song = self.request.get('song')
+    	self.response.write('Serves HTML [depricated]')
+    	output = urlfetch.fetch('http://www.songlyrics.com/').content
+    	self.response.write(output)
