@@ -61,7 +61,15 @@
     </div>
 
 
-    <script>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script type="text/JavaScript">
       function get(name){
          if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
             return decodeURIComponent(name[1]);
@@ -71,6 +79,18 @@
         song = get('id');
         if(song != undefined){
           document.getElementById("stile").innerHTML = song;
+
+          $.getJSON( "api/song?id=" + song, function( data ) {
+            var items = [];
+            $.each( data, function( key, val ) {
+              items.push( "<li id='" + key + "'>" + val + "</li>" );
+            });
+           
+            $( "<ul/>", {
+              "class": "my-new-list",
+              html: items.join( "" )
+            }).appendTo( "body" );
+          });
         }
         else{
           document.getElementById("stile").innerHTML = "Error 4200";
@@ -83,13 +103,5 @@
 
 
     </script>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-
-     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-
   </body>
 </html>
