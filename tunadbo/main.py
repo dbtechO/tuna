@@ -17,13 +17,15 @@
 import webapp2
 from calc import *
 from search import *
+from song import *
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('Serves HTML [depricated]')
 
 app = webapp2.WSGIApplication([
-    ('/api/calc', CalcHandler),
+    ('/calc', CalcHandler),
     ('/', MainHandler), 
-    ('/api/search', SearchHandler),
+    ('/search', SearchHandler),
+    ('/song', SongHandler)
 ], debug=True)
