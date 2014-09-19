@@ -24,18 +24,11 @@ class SongHandler(webapp2.RequestHandler):
         idd = self.request.get('id')
         url = 'http://www.songlyrics.com/'+idd+'/'
 
-
-        self.response.out.write("Song: "+idd+" ")
-        self.response.out.write("Artist: "+lyrics.getArtist(url)+" ")
-        self.response.out.write("Scale: "+ str(lyrics.arbitraryScale(url))+"\n")
-    	'''obj = {
-    		'query': query,
-    		'scale': lyrics.arbitraryScale(output), 
-    		'payload':'some var', 
+        obj = {
+    		'id': idd,
+    		'artist': lyrics.getArtist(url), 
+    		'scale': str(lyrics.arbitraryScale(url)), 
     	}
     	self.response.out.write(json.dumps(obj))
-    	
-    	self.response.write('Serves HTML [depricated]')
-    	output = lyrics.getLyrics('http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/')
-    	'''#self.response.write(str(lyrics.arbitraryScale(output)))
+
 
