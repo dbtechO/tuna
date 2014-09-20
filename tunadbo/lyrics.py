@@ -122,9 +122,9 @@ class lyrics:
 		return string
 	@staticmethod
 	def arbitraryScale(url):
-		lyrics = getLyrics(url)
+		lyrs = lyrics.getLyrics(url)
 		count = 0
-		for line in lyrics:
+		for line in lyrs:
 			if "chicago" in line.lower():
 				count +=1
 		return count

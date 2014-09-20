@@ -30,6 +30,9 @@ handlers:
   static_files: song.html
   upload: song\.html
 
+- url: /about
+  static_files: about.html
+  upload: about\.html  
 
 - url: /client\.js
   static_files: client.js
