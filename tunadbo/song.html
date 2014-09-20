@@ -55,8 +55,8 @@
     <!-- BODY -->
     <div class = "container">
       <div class = "jumbotron">
-        <h2 id = "stile"> Loading </h2>
-        <p id = "sinfo"> Loading </p>
+        <h1 id = "stile"></h1>
+        <p id = "sinfo" align="center"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Hold on! There are currently <span id="tunaCount">0</span> tuna in the net. </p>
       </div>
     </div>
 
@@ -75,27 +75,44 @@
             return decodeURIComponent(name[1]);
       }
 
-      function getSong(){
-        song = get('id');
-        if(song != undefined){
-          document.getElementById("stile").innerHTML = song;
-
-          $.getJSON( "api/song?id=" + song, function( data ) {
-            var items = [];
-            $.each( data, function( key, val ) {
-              items.push( "<li id='" + key + "'>" + val + "</li>" );
-            });
-           
-            $( "<ul/>", {
-              "class": "my-new-list",
-              html: items.join( "" )
-            }).appendTo( "body" );
-          });
-        }
-        else{
+      function dispErr(){
           document.getElementById("stile").innerHTML = "Error 4200";
           document.getElementById("sinfo").innerHTML = "<img src='css/tuna.png' class='img-responsive' align='left'> Sorry! It looks like we can't catch any tuna right now; you may have an invalid song address. Please try again later. ";
+      }
+
+      var tunac = 0;
+
+      function tunainc(){
+        tunac++;
+        document.getElementById("tunaCount").innerHTML = tunac;
+      }
+
+      function getSong(){
+        var loading = setInterval(tunainc, 50); 
+
+
+        song = get('id');
+        if(song != undefined){
+          $.getJSON( "api/song?id=" + song, function( data ) {
+            var items = [];
+            if(data["artist"] == "error")
+              dispErr();
+            else{
+              $.each( data, function( key, val ) {
+                items.push( "<li id='" + key + "'>" + val + "</li>" );
+              });
+             
+              $( "<ul/>", {
+                "class": "my-new-list",
+                html: items.join( "" )
+              }).appendTo( "body" );
+          }
+          }).always(function() {clearInterval(loading);});
         }
+        else{
+          dispErr();
+        }
+
       }
 
       window.onload = getSong();

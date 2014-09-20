@@ -24,11 +24,25 @@ class SongHandler(webapp2.RequestHandler):
         idd = self.request.get('id')
         url = 'http://www.songlyrics.com/'+idd+'/'
 
-        obj = {
-    		'id': idd,
-    		'artist': lyrics.getArtist(url), 
-    		'scale': str(lyrics.arbitraryScale(url)), 
-    	}
-    	self.response.out.write(json.dumps(obj))
+
+        #Could be optimized by grabbing html first.
+        yamlresponse = {
+            'id': idd,
+            'artist': lyrics.getArtist(url), 
+            'scale': str(lyrics.arbitraryScale(url)), 
+        }
+        self.response.out.write(json.dumps(yamlresponse))
+
+    #in the case that no artist is found we return the standard error.
+    def handle_exception(self, exception, debug):
+        yamlresponse = {
+            'id': 'error',
+            'artist': 'error', 
+            'scale': '0', 
+        }
+        self.response.out.write(json.dumps(yamlresponse))
+
+
+
 
 

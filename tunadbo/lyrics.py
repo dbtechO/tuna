@@ -125,7 +125,11 @@ class lyrics:
 		lyrs = lyrics.getLyrics(url)
 		count = 0
 		for line in lyrs:
+<<<<<<< HEAD
 			if "chicago" in line.lower():
+=======
+			if "it" in line.lower():
+>>>>>>> 66162fd86842d97e1903ea8aea23f1dc0540c27d
 				count +=1
 		return count
 #lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
