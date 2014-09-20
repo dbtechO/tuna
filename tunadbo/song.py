@@ -15,8 +15,24 @@
 # limitations under the License.
 #
 import webapp2
+import logging
+
+from google.appengine.ext import db
+from google.appengine.api import users
+
 from lyrics import *
 import json
+
+VS_NUM = 1
+
+class Tune(db.Model):
+    idd = db.StringProperty(required=True)
+    version = db.IntegerProperty(required=True)
+    title = db.StringProperty(required=True)
+    artist = db.StringProperty(required=True)
+    scale = db.FloatProperty(required=True)
+    popularity = db.IntegerProperty(required=True)
+
 
 class SongHandler(webapp2.RequestHandler):
     def get(self):
@@ -25,20 +41,44 @@ class SongHandler(webapp2.RequestHandler):
         url = 'http://www.songlyrics.com/'+idd+'/'
 
 
+        tunes = Tune.all()
+        tunes.filter("idd =", idd)
+        result = tunes.get()
+        if result == None:
+            #generate new database entry
+            result = Tune(
+                idd = idd,
+                version = VS_NUM,
+                title = lyrics.getTitle(url),
+                artist = lyrics.getArtist(url),
+                scale = float(lyrics.arbitraryScale(url)),
+                popularity = 1)
+            if result.artist == "Error" or result.title == "Error":
+                return self.handle_exception("Invalid ID", False)
+            result.put()
+            
+        else:
+            if result.version != VS_NUM:
+                result.scale = float(lyrics.arbitraryScale(url))
+            result.popularity = result.popularity+1
+            result.put()
+
         #Could be optimized by grabbing html first.
         yamlresponse = {
-            'id': idd,
-            'artist': lyrics.getArtist(url), 
-            'scale': str(lyrics.arbitraryScale(url)), 
+            'id': result.idd,
+            'title': result.title,
+            'artist': result.artist, 
+            'scale': result.scale,
+            'popularity': result.popularity
         }
         self.response.out.write(json.dumps(yamlresponse))
+        
 
     #in the case that no artist is found we return the standard error.
     def handle_exception(self, exception, debug):
         yamlresponse = {
             'id': 'error',
-            'artist': 'error', 
-            'scale': '0', 
+            'exception': str(exception)
         }
         self.response.out.write(json.dumps(yamlresponse))
 

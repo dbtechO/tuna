@@ -67,12 +67,24 @@ class lyrics:
 	def getArtist(url):
 		webpage = urllib2.urlopen(url)
 		reading = False
-		artist = ""
+		artist = "Error"
 		for line in webpage:
 			if "Artist: " in line:
 				artist = lyrics.replace(line, False)
 				artist = artist[artist.find(":")+2:]
 		return artist
+
+	@staticmethod
+	def getTitle(url):
+		webpage = urllib2.urlopen(url)
+		reading = False
+		title = "Error"
+		for line in webpage:
+			if 'meta property="og:title"' in line:
+				title=line
+				title = title.split('"')[3]
+				title = title[:title.find("-")-1]
+		return title
 
 	@staticmethod
 	def search(searchline):
@@ -125,11 +137,7 @@ class lyrics:
 		lyrs = lyrics.getLyrics(url)
 		count = 0
 		for line in lyrs:
-<<<<<<< HEAD
-			if "chicago" in line.lower():
-=======
 			if "it" in line.lower():
->>>>>>> 66162fd86842d97e1903ea8aea23f1dc0540c27d
 				count +=1
 		return count
 #lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")

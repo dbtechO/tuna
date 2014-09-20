@@ -95,7 +95,7 @@
         if(song != undefined){
           $.getJSON( "api/song?id=" + song, function( data ) {
             var items = [];
-            if(data["artist"] == "error")
+            if(data["id"] == "error")
               dispErr();
             else{
               $.each( data, function( key, val ) {
