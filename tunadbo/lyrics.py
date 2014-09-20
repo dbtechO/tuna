@@ -73,6 +73,7 @@ class lyrics:
 				artist = lyrics.replace(line, False)
 				artist = artist[artist.find(":")+2:]
 		return artist
+
 	@staticmethod
 	def search(searchline):
 		line = lyrics.formatSearch(searchline)
@@ -120,7 +121,8 @@ class lyrics:
 			iterator+=1
 		return string
 	@staticmethod
-	def arbitraryScale(lyrics):
+	def arbitraryScale(url):
+		lyrics = getLyrics(url)
 		count = 0
 		for line in lyrics:
 			if "chicago" in line.lower():

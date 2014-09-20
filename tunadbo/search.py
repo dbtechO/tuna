@@ -19,10 +19,21 @@ from lyrics import *
 
 class SearchHandler(webapp2.RequestHandler):
     def get(self):
-    	song = self.request.get('song')
+    	self.response.headers['Content-Type'] = 'application/json'
+    	query = self.request.get('query')
+    	serResults = lyrics.search(query)
+    	for key in serResults:
+    		link = serResults[key]
+    		self.response.out.write("Song: "+key+" ")
+    		self.response.out.write("Artist: "+lyrics.getArtist(link)+" ")
+    		self.response.out.write("Scale: "+ str(lyrics.arbitraryScale(link))+"\n")
+    	'''obj = {
+    		'query': query,
+    		'scale': lyrics.arbitraryScale(output), 
+    		'payload':'some var', 
+    	}
+    	self.response.out.write(json.dumps(obj))
+    	
     	self.response.write('Serves HTML [depricated]')
-    	#output = lyrics.getLyrics("http://www.azlyrics.com/lyrics/kendricklamar/goodkid.html")
-    	webpage = lyrics.search("kendrick lamar")
-    	for line in webpage:
-    		self.response.write(line)
-
+    	output = lyrics.getLyrics('http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/')
+    	'''#self.response.write(str(lyrics.arbitraryScale(output)))
