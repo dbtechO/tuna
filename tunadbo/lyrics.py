@@ -85,12 +85,17 @@ class lyrics:
 				title = title.split('"')[3]
 				title = title[:title.find("-")-1]
 		return title
-
+	#We should expand this function to pull more results if prompted
 	@staticmethod
-	def search(searchline):
+	def search(searchline, page = 1):
 		line = lyrics.formatSearch(searchline)
 		query = "http://www.songlyrics.com/index.php?section=search&searchW="+line+"&submit=Search"
+
+		if page != 1:
+			query = "http://www.songlyrics.com/index.php?section=search&searchIn1=artist&searchIn2=album&searchIn3=song&searchIn4=lyrics&searchW="+line+"&pageNo="+str(page)
 		webpage = urllib2.urlopen(query)
+		
+
 		#Make sure it is not reading unecessailry
 		reading = False
 		output = {}
@@ -142,4 +147,4 @@ class lyrics:
 		return count
 #lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
 #print lyrics.search("kendrick lamar")
-print lyrics.getArtist("http://www.songlyrics.com/kendrick-lamar/poetic-justice-lyrics/")
+print lyrics.search("kendrick+lamar")
