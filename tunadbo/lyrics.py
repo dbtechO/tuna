@@ -5,6 +5,7 @@ import logging
 
 from google.appengine.ext import db
 from google.appengine.api import users
+VS_NUM = 1
 class Tune(db.Model):
     idd = db.StringProperty(required=True)
     version = db.IntegerProperty(required=True)
@@ -14,6 +15,7 @@ class Tune(db.Model):
     popularity = db.IntegerProperty(required=True)
 
 class Lyrics:
+	#proposal: alternative option to load from Tune database
 	def __init__(self, url):
 		self.webpage = urllib2.urlopen(url)
 		artist = "Error"
@@ -22,6 +24,7 @@ class Lyrics:
 		artistB = False
 		titleB = False
 		lyricsB = False
+		lyrs = False
 		for line in self.webpage:
 			if not artistB and "Artist: " in line:
 				artist = Lyrics.replace(line, False)
@@ -106,17 +109,23 @@ class Lyrics:
 
 		#Make sure it is not reading unecessailry
 		reading = False
-		output = {}
+		output = []
 		for line in webpage:
 			if "<div class=\"coltwo-wide-2\">" in line:
 				reading = True
 			if reading and "<a href" in line and "<img" in line and "title" in line:
 				idx = line.find("href=\"")+len("href=\"")
 				link = line[idx:line.find('\"',idx)]
-				idx = line.find("title=\"", idx) +len("title=\"")
-				title = line[idx:line.find('\"',idx)]
-				title =title.replace("\r", "")
-				output[title] = link
+				tune = Lyrics(link)
+				idd = link.replace('http://www.songlyrics.com/', '')
+				result = Tune(
+	                idd = idd,
+	                version = VS_NUM,
+	                title = tune.title, 
+	                artist = tune.artist,
+	                scale = float(tune.score),
+	                popularity = 1)
+				output.append(result)
 			if "<! --end coltwo-center-->" in line:
 				print "break"
 				break;

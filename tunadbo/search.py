@@ -24,14 +24,10 @@ class SearchHandler(webapp2.RequestHandler):
     	serResults = Lyrics.search(query)
         jsonresponse = {}
         clink = ""
+        count = 0
     	for key in serResults:
-            link = serResults[key]
-            
-            link = link.replace('http://www.songlyrics.com/', '')
-            clink = link
-            scale = 0#Lyrics.arbitraryScale(link)
-            jsonresponse[key] = []
-        self.response.out.write(clink)
+            jsonresponse[count] = key
+            count+=1
         self.response.out.write(json.dumps(jsonresponse))     
     	'''obj = {
     		'query': query,
