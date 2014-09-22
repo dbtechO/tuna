@@ -58,31 +58,55 @@
     <div class = "panel-body">
       <div class="input-group input-group-lg">
         <input type="text" class="form-control" placeholder="Search Terms" id="searchbox">
-         <span class="input-group-btn"><button class="btn btn-success" type="button">Search</button></span>
+         <span class="input-group-btn"><button class="btn btn-success" type="button" id = "searchButton">Search</button></span>
       </div>
     </div>
 
     <div class = "panel-footer">Copyright DB tech 2014</div>
   </div>
 
-  <form class="form-horizontal well" style="display: none;">
-    <fieldset>
-      <legend>Controls Bootstrap supports</legend>
-      <div class="control-group">
-        <label class="control-label" for="input01">Text input</label>
-        <div class="controls">
-          <input type="text" class="input-large" id="input01">
-          <p>
-        </div>
-      </div>
-    </fieldset>
-  </form>
+  <div class = "panel panel-default" id = "searchResults" style="display: none;">
+    <h3 class = "panel-heading">Search Results:</h3>
+    <div class = "panel-body" id = "results"><p>[Insert Search Results here]</p></div>
+
+
 </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+      $("#searchButton").click(function(){
+        
+        var searchbox = $('#searchbox').val()
+        if (searchbox != ""){
+          $('#searchResults').show();
+          $('#results').html(searchbox);
+        
+          $.getJSON( "api/search?query=" + searchbox, function( data ) {
+              var items = [];
+              if(data["id"] == "error")
+                dispErr();
+              else{
+                $.each( data, function( key, val ) {
+                  items.push( "<li id='" + key + "'>" + val + "</li>" );
+                });
+               
+                $( "<ul/>", {
+                  "class": "my-new-list",
+                  html: items.join( "" )
+                }).appendTo( "results" );
+            }
+            }).always(function() {clearInterval(loading);});
+        }
+
+      });
+    });
+
+    </script>
 
 
   </body>

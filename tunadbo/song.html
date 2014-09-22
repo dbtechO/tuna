@@ -76,8 +76,8 @@
       }
 
       function dispErr(){
-          document.getElementById("stile").innerHTML = "Error 4200";
-          document.getElementById("sinfo").innerHTML = "<img src='css/tuna.png' class='img-responsive' align='left'> Sorry! It looks like we can't catch any tuna right now; you may have an invalid song address. Please try again later. ";
+          $("#stile").html("Error 4200");
+          $("#sinfo").html("<img src='css/tuna.png' class='img-responsive' align='left'> Sorry! It looks like we can't catch any tuna right now; you may have an invalid song address. Please try again later. ");
       }
 
       var tunac = 0;
@@ -86,7 +86,6 @@
         tunac++;
         document.getElementById("tunaCount").innerHTML = tunac;
       }
-
       function getSong(){
         var loading = setInterval(tunainc, 50); 
 
@@ -105,7 +104,7 @@
               $( "<ul/>", {
                 "class": "my-new-list",
                 html: items.join( "" )
-              }).appendTo( "body" );
+              }).appendTo( "sinfo" );
           }
           }).always(function() {clearInterval(loading);});
         }
