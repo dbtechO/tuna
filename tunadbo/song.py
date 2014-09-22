@@ -60,6 +60,7 @@ class SongHandler(webapp2.RequestHandler):
         else:
             if result.version != VS_NUM:
                 result.scale = float(lyrics.arbitraryScale(url))
+                result.version = VS_NUM
             result.popularity = result.popularity+1
             result.put()
 
