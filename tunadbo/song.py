@@ -15,24 +15,12 @@
 # limitations under the License.
 #
 import webapp2
-import logging
 
-from google.appengine.ext import db
-from google.appengine.api import users
 
 from lyrics import *
 import json
 
 VS_NUM = 1
-
-class Tune(db.Model):
-    idd = db.StringProperty(required=True)
-    version = db.IntegerProperty(required=True)
-    title = db.StringProperty(required=True)
-    artist = db.StringProperty(required=True)
-    scale = db.FloatProperty(required=True)
-    popularity = db.IntegerProperty(required=True)
-
 
 class SongHandler(webapp2.RequestHandler):
     def get(self):
@@ -45,13 +33,15 @@ class SongHandler(webapp2.RequestHandler):
         tunes.filter("idd =", idd)
         result = tunes.get()
         if result == None:
-            #generate new database entry
+            #generate new database entry]
+            tune = Lyrics(url)
+
             result = Tune(
                 idd = idd,
                 version = VS_NUM,
-                title = lyrics.getTitle(url),
-                artist = lyrics.getArtist(url),
-                scale = float(lyrics.arbitraryScale(url)),
+                title = tune.title, 
+                artist = tune.artist,
+                scale = float(tune.score),
                 popularity = 1)
             if result.artist == "Error" or result.title == "Error":
                 return self.handle_exception("Invalid ID", False)
@@ -59,7 +49,7 @@ class SongHandler(webapp2.RequestHandler):
             
         else:
             if result.version != VS_NUM:
-                result.scale = float(lyrics.arbitraryScale(url))
+                result.scale = float(Lyrics.arbitraryScale(url))
             result.popularity = result.popularity+1
             result.put()
 

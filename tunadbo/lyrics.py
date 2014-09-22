@@ -1,83 +1,80 @@
 #lyrics grabber test
 #from google.appengine.api import urlfetch
 import urllib2
-class lyrics:
-	@staticmethod
-	def getLyrics(url):
-		#urllib2
-		webpage = urllib2.urlopen(url)
-		'''urlfetch method
-		server = urlfetch.fetch(url)
-		webpage = server.content
-		'''
+import logging
+
+from google.appengine.ext import db
+from google.appengine.api import users
+class Tune(db.Model):
+    idd = db.StringProperty(required=True)
+    version = db.IntegerProperty(required=True)
+    title = db.StringProperty(required=True)
+    artist = db.StringProperty(required=True)
+    scale = db.FloatProperty(required=True)
+    popularity = db.IntegerProperty(required=True)
+
+class Lyrics:
+	def __init__(self, url):
+		self.webpage = urllib2.urlopen(url)
+		artist = "Error"
+		title = "Error"
 		output = []
+		artistB = False
+		titleB = False
+		lyricsB = False
+		for line in self.webpage:
+			if not artistB and "Artist: " in line:
+				artist = Lyrics.replace(line, False)
+				artist = artist[artist.find(":")+2:]
+				artistB = True
+			if not titleB and 'meta property="og:title"' in line:
+				title=line
+				title = title.split('"')[3]
+				title = title[:title.find("-")-1]
+				titleB = True
+			#why this may be called
+			if lyrs and "</div>" in line:
+				lyrs = False
+				lyricsB = True
+			if lyrs and line is not None:
+				line = Lyrics.replace(line)
+				output.append(line)
+			if (not lyrs) and "id=\"songLyricsDiv-outer\"" in line:
+				lyrs = True
+			if titleB and artistB and lyricsB:
+				break;
+		self.lyrics = output	
+		self.artist = artist
+		self.title = title
+		self.score = Lyrics.getScore(lyrs=self.lyrics)
+	@staticmethod
+	def getLyrics(url=None, webpage=None):
+		output = []
+		if webpage is None:
+			webpage = urllib2.urlopen(url)
 		lyrs = False
 		for line in webpage:
 			if lyrs and "</div>" in line:
 				break;
 			if lyrs and line is not None:
-				line = lyrics.replace(line)
+				line = Lyrics.replace(line)
 				output.append(line)
 			if (not lyrs) and "id=\"songLyricsDiv-outer\"" in line:
 				lyrs = True
 		return output
-	#implemented from the AZlyrics search function
-	def searchAz(self, keywords):
-		query = "http://search.azlyrics.com/search.php?q="+keywords
-		page = "asd"
-		output = {}
-		key = ""
-		temp = []
-		results = False
-		for line in page:
-			if "no results." in line:
-				output.append("no results")
-				break;
-			if "Artist results" in line:
-				if len(temp) > 0:
-					output[key] = temp
-				temp = []
-				key = "artist"
-				results = True
-			elif "Album results" in line:
-				if len(temp) > 0:
-					output[key] = temp
-				temp = []
-				key = "album"
-				results = True
-			elif "Song results" in line:
-				if len(temp) > 0:
-					output[key] = temp
-				temp = []
-				key = "song"
-				results = True
-			if results:
-				if "<a href" in line and "lyrics" in line:
-					firstIdx = line.index("\"") +1
-					secIdx = line.find("\"", firstIdx)
-					temp.append(line[firstIdx:secIdx])
-		if len(temp) > 0:
-			output[key] = temp
-		for key in output:
-			print key +"=> key"
-			for k in output[key]:
-				print k
-		return output
 	@staticmethod
-	def getArtist(url):
-		webpage = urllib2.urlopen(url)
-		reading = False
+	def getArtist(url=None, webpage=None):
 		artist = "Error"
 		for line in webpage:
 			if "Artist: " in line:
-				artist = lyrics.replace(line, False)
+				artist = Lyrics.replace(line, False)
 				artist = artist[artist.find(":")+2:]
 		return artist
-
 	@staticmethod
-	def getTitle(url):
-		webpage = urllib2.urlopen(url)
-		reading = False
+	def getTitle(url=None, webpage=None):
+		if webpage is None:
+			webpage = urllib2.urlopen(url)
+		lyrs = False
 		title = "Error"
 		for line in webpage:
 			if 'meta property="og:title"' in line:
@@ -85,10 +82,21 @@ class lyrics:
 				title = title.split('"')[3]
 				title = title[:title.find("-")-1]
 		return title
+	@staticmethod
+	def getScore(url=None, webpage=None, lyrs=None):
+		if lyrs is None:
+			if webpage is None:
+				webpage = urllib2.urlopen(url)
+			lyrs = Lyrics.getLyrics(webpage=webpage)
+		count = 0
+		for line in lyrs:
+			if "it" in line.lower():
+				count +=1
+		return count
 	#We should expand this function to pull more results if prompted
 	@staticmethod
 	def search(searchline, page = 1):
-		line = lyrics.formatSearch(searchline)
+		line = Lyrics.formatSearch(searchline)
 		query = "http://www.songlyrics.com/index.php?section=search&searchW="+line+"&submit=Search"
 
 		if page != 1:
@@ -137,14 +145,7 @@ class lyrics:
 					iterator-=1
 			iterator+=1
 		return string
-	@staticmethod
-	def arbitraryScale(url):
-		lyrs = lyrics.getLyrics(url)
-		count = 0
-		for line in lyrs:
-			if "it" in line.lower():
-				count +=1
-		return count
-#lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
-#print lyrics.search("kendrick lamar")
-print lyrics.search("kendrick+lamar")
+	
+#Lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
+#print Lyrics.search("kendrick lamar")
+print Lyrics.search("kendrick+lamar")

@@ -16,24 +16,30 @@
 #
 import webapp2
 from lyrics import *
-
+import json
 class SearchHandler(webapp2.RequestHandler):
     def get(self):
     	self.response.headers['Content-Type'] = 'application/json'
     	query = self.request.get('query')
-    	serResults = lyrics.search(query)
+    	serResults = Lyrics.search(query)
+        jsonresponse = {}
+        clink = ""
     	for key in serResults:
-    		link = serResults[key]
-    		self.response.out.write("Song: "+key+" ")
-    		self.response.out.write("Artist: "+lyrics.getArtist(link)+" ")
-    		self.response.out.write("Scale: "+ str(lyrics.arbitraryScale(link))+"\n")
+            link = serResults[key]
+            
+            link = link.replace('http://www.songlyrics.com/', '')
+            clink = link
+            scale = 0#Lyrics.arbitraryScale(link)
+            jsonresponse[key] = []
+        self.response.out.write(clink)
+        self.response.out.write(json.dumps(jsonresponse))     
     	'''obj = {
     		'query': query,
-    		'scale': lyrics.arbitraryScale(output), 
+    		'scale': Lyrics.arbitraryScale(output), 
     		'payload':'some var', 
     	}
     	self.response.out.write(json.dumps(obj))
     	
     	self.response.write('Serves HTML [depricated]')
-    	output = lyrics.getLyrics('http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/')
-    	'''#self.response.write(str(lyrics.arbitraryScale(output)))
+    	output = Lyrics.getLyrics('http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/')
+    	'''#self.response.write(str(Lyrics.arbitraryScale(output)))
