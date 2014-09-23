@@ -109,26 +109,38 @@ class Lyrics:
 
 		#Make sure it is not reading unecessailry
 		reading = False
-		output = []
+		artdone = False
+		output = {}
+		count = 0
 		for line in webpage:
 			if "<div class=\"coltwo-wide-2\">" in line:
 				reading = True
-			if reading and "<a href" in line and "<img" in line and "title" in line:
+			if reading and not artdone and "<a href" in line and "<img" in line and "title" in line:
 				idx = line.find("href=\"")+len("href=\"")
 				link = line[idx:line.find('\"',idx)]
-				tune = Lyrics(link)
+				titx = line.find("title=\"")+len("title=\"")
+				title = line[titx:line.find('"',idx)]
 				idd = link.replace('http://www.songlyrics.com/', '')
-				result = Tune(
-	                idd = idd,
-	                version = VS_NUM,
-	                title = tune.title, 
-	                artist = tune.artist,
-	                scale = float(tune.score),
-	                popularity = 1)
-				output.append(result)
+				output.update(
+					{str(count): {'id': idd,
+					'version': VS_NUM,
+					'title': title,
+					'artist': None,
+					'scale': float(0),
+					'popularity': 1}})
+				artdone = True
+			if reading and artdone and "<p>by " in line:
+				artx = line.find("\">")+len("\">")
+				artist = line[artx:line.find("</a> ")]
+				output[str(count)]['artist'] = artist
+				count+= 1
+				artdone = False
+
 			if "<! --end coltwo-center-->" in line:
 				print "break"
 				break;
+
+
 		return output
 
 	@staticmethod
