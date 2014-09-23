@@ -85,26 +85,29 @@
         if (searchbox != ""){
           $('#searchResults').show();
           $('#results').html(searchbox);
-        
-          $.getJSON( "api/search?query=" + searchbox, function( data ) {
-              var items = [];
-              if(data["id"] == "error")
-                dispErr();
-              else{
-                $.each( data, function( key, val ) {
-                  items.push( "<li id='" + key + "'>" + val + "</li>" );
-                });
-               
-                $( "<ul/>", {
-                  "class": "my-new-list",
-                  html: items.join( "" )
-                }).appendTo( "results" );
-            }
-            }).always(function() {clearInterval(loading);});
+        getSearchResults()
         }
 
       });
     });
+    function getSearchResults(){
+      var searchbox = $('#searchbox').val()
+      $.getJSON( "api/search?query=" + searchbox, function( data ) {
+          var items = [];
+          if(data["id"] == "error")
+            dispErr();
+          else{
+            $.each( data, function( key, val ) {
+              items.push( "<li id='" + key + "'>" + val + "</li>" );
+            });
+           
+            $( "<ul/>", {
+              "class": "my-new-list",
+              html: items.join( "" )
+            }).appendTo( "results" );
+        }
+        }).always(function() {clearInterval(loading);});
+    }
 
     </script>
 
