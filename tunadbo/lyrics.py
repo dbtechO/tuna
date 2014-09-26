@@ -110,7 +110,7 @@ class Lyrics:
 		#Make sure it is not reading unecessailry
 		reading = False
 		artdone = False
-		output = {}
+		output = []
 		count = 0
 		for line in webpage:
 			if "<div class=\"coltwo-wide-2\">" in line:
@@ -121,18 +121,18 @@ class Lyrics:
 				titx = line.find("title=\"")+len("title=\"")
 				title = line[titx:line.find('"',idx)]
 				idd = link.replace('http://www.songlyrics.com/', '')
-				output.update(
-					{str(count): {'id': idd,
+				output.append(
+					{'id': idd,
 					'version': VS_NUM,
 					'title': title,
 					'artist': None,
 					'scale': float(0),
-					'popularity': 1}})
+					'popularity': 1})
 				artdone = True
 			if reading and artdone and "<p>by " in line:
 				artx = line.find("\">")+len("\">")
 				artist = line[artx:line.find("</a> ")]
-				output[str(count)]['artist'] = artist
+				output[count]['artist'] = artist
 				count+= 1
 				artdone = False
 

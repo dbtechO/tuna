@@ -81,10 +81,11 @@
     $(document).ready(function(){
       $("#searchButton").click(function(){
         
-        var searchbox = $('#searchbox').val()
+        var searchbox = $('#searchbox').val();
         if (searchbox != ""){
           $('#searchResults').show();
           $('#results').html(searchbox);
+          
         getSearchResults()
         }
 
@@ -97,16 +98,24 @@
           if(data["id"] == "error")
             dispErr();
           else{
-            $.each( data, function( key, val ) {
-              items.push( "<li id='" + key + "'>" + val + "</li>" );
+            count = 0
+            $.each( data, function( key, array ) {
+              //array function thing:
+              var op = ""
+              for (keyArr in array) { 
+                op += keyArr+": "+array[keyArr]+"<br />"
+              }
+              items.push( "<li id='" + key + "'>" + op + "</li>" );
+              count ++
             });
-           
-            $( "<ul/>", {
-              "class": "my-new-list",
-              html: items.join( "" )
-            }).appendTo( "results" );
+            appendResults("results", "<ul>"+items.join("")+"</ul>")
         }
         }).always(function() {clearInterval(loading);});
+    }
+    function appendResults(id, string){
+      if(id[0] != "#") id = "#"+id;
+      var value = $(id).html();
+      $(id).html(value+string);
     }
 
     </script>
