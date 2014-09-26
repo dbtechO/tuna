@@ -17,6 +17,7 @@
 import webapp2
 from search import *
 from song import *
+from top import *
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -25,5 +26,6 @@ class MainHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler), 
     ('/api/search', SearchHandler),
-    ('/api/song', SongHandler)
+    ('/api/song', SongHandler),
+    ('/api/top', TopHandler)
 ], debug=True)
