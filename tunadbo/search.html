@@ -52,13 +52,13 @@
 
 
     <!-- BODY -->
-<div class = "container">
+<div class = "container" id="container">
   <div class ="jumbotron"> 
     <h1>Search<small> for you favorite songs, artists, or albums</small></h1>
     <div class = "panel-body">
       <div class="input-group input-group-lg">
         <input type="text" class="form-control" placeholder="Search Terms" id="searchbox">
-         <span class="input-group-btn"><button class="btn btn-success" type="button" id = "searchButton">Search</button></span>
+         <span class="input-group-btn"><button class="btn btn-success" type="button" id="searchButton">Search</button></span>
       </div>
     </div>
 
@@ -66,10 +66,12 @@
   </div>
 
   <div class = "panel panel-default" id = "searchResults" style="display: none;">
-    <h3 class = "panel-heading">Search Results:</h3>
-    <div class = "panel-body" id = "results"><p>[Insert Search Results here]</p></div>
-
-
+    <h2 class = "panel-heading" id="searchHeading">Search Results:</h2>
+    <div class = "panel-body" id = "results">
+      <ul class = "list-group" id = "resultsList">
+      </ul>
+    </div>
+  </div>
 </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -78,46 +80,58 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-    $(document).ready(function(){
-      $("#searchButton").click(function(){
-        
-        var searchbox = $('#searchbox').val();
-        if (searchbox != ""){
-          $('#searchResults').show();
-          $('#results').html(searchbox);
-          
-        getSearchResults()
-        }
+      $(document).ready(function(){
+        $("#searchButton").click(function(){
+          var searchbox = $('#searchbox').val();
+          if (searchbox != ""){
+            $('#searchResults').show();
+            $('#resultsList').html("")
+            $('#searchHeading').html("Search Results -"+searchbox)
+          getSearchResults()
+          }
 
+        });
       });
-    });
-    function getSearchResults(){
-      var searchbox = $('#searchbox').val()
-      $.getJSON( "api/search?query=" + searchbox, function( data ) {
-          var items = [];
-          if(data["id"] == "error")
-            dispErr();
-          else{
-            count = 0
-            $.each( data, function( key, array ) {
-              //array function thing:
-              var op = ""
-              for (keyArr in array) { 
-                op += keyArr+": "+array[keyArr]+"<br />"
+      
+      function getSearchResults(){
+        var searchbox = $('#searchbox').val()
+        $.getJSON( "api/search?query=" + searchbox, function( data ) {
+            var items = [];
+            if(data["id"] == "error")
+              dispErr();
+            else{
+              count = 0
+              $.each( data, function( key, array ) {
+                //array function thing:
+                items.push(formatting(key, array));
+                count ++
+              });
+              //appendResults("results", items.join(""))
+              var id = "resultsList"
+              for (var i = 0; i < items.length; i++){
+                appendResults(id, items[i])
               }
-              items.push( "<li id='" + key + "'>" + op + "</li>" );
-              count ++
-            });
-            appendResults("results", "<ul>"+items.join("")+"</ul>")
+          }
+          }).always(function() {clearInterval(loading);});
+      }
+      function appendResults(id, string){
+        if(id[0] != "#") id = "#"+id;
+        var value = $(id).html();
+        $(id).html(value+string);
+      }
+      function formatting(key, array){
+        var op = ""
+        for (keyArr in array) { 
+          op += keyArr+": "+array[keyArr]+"<br />"
         }
-        }).always(function() {clearInterval(loading);});
-    }
-    function appendResults(id, string){
-      if(id[0] != "#") id = "#"+id;
-      var value = $(id).html();
-      $(id).html(value+string);
-    }
-
+        var def = '<li class = "list-group-item">'+array['artist']+" - <strong>" + array['title']+'</strong></li>'
+        var list = '<a href = "song?id='+array['id']+'"><li class = "list-group-item">'+array['artist']+" - <strong>" + array['title']+'</strong></li></a>'
+        var panel = '<div class = "panel panel-default"><h3 class = "panel-heading">'+array['artist']+" - <strong>" + array['title']+'</strong></h3><div class="panel-body">'+op+'</div></div>'/*'<div class = "panel panel-default" id = '+array["title"]+'>
+          <h3 class = "panel-heading">'+array["title"]+'</h3>
+          <div class = "panel-body"><p>'+op+'</p>
+        </div>'*/
+        return list
+      }
     </script>
 
 
