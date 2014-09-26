@@ -9,7 +9,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <link href="css/styles.css" rel="stylesheet">
-
+        <script src="js/holder.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -53,19 +53,12 @@
   			<h1> Tuna listens for you. </h1>
   			<p> Tuna does stuff tuna tuan tuna tuna tuantuna tuantuna tuantuna tuantuna tuantuna tuantuna tuantuna tuantuna tuna tuna tuna. Tuna? </p>
   			<a class = "btn btn-success" href = "\search">Search now!</a>
-  		</div>
-        <div class="row">
-          <div class="col-sm-6 col-md-4">
-            <div class="thumbnail">
-              <img data-src="holder.js/300x300" alt="...">
-              <div class="caption">
-                <h3>Thumbnail label</h3>
-                <p>...</p>
-                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-              </div>
-            </div>
-          </div>
+        <div id="topsongs" style="display: none;">
         </div>
+  		</div>
+    </div>
+
+
   	</div>
 
 
@@ -73,6 +66,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      function getTop(){
+        $.getJSON("api/top", function(data)
+        {
+           var result = '';
+          for (var i = 0; i < data.length; i++) {
+            var tune = data[i];
+            result+='<li class="list-group-item">'+tune['rank']+'. <a href="song?id=' +tune['id']+ '">'+tune['title']+'</a><small> by '+ tune['artist']+'</small> <span class="badge">' + tune['popularity'] + '</span></li>';
+          };
+          $("#topsongs").html('<br/><h2> Top Songs </h2><ol class="list-group">'+result+'</ol>').show('slow');
+        });
+      }
+
+      window.onload = getTop();
+    </script>
+
 
 
   </body>
