@@ -25,7 +25,7 @@ function getSong(){
 	    if(data["id"] == "error")
 	      dispErr();
 	    else{
-	     $("#stile").html(data["title"] + "<small> by " + data["artist"]);
+	     $("#stile").html(data["title"] + "<small><br/>by " + data["artist"]);
 	     $("#sinfo").html("Hej! This song has a tuna score of  <button type ='button' class='btn btn-info'>"+data["scale"]+"</button><br/> For more info on how we caught "+ data["scale"] + " tuna, read <a href='/about'>our about page.</a>");
 	     //$("#sinfo").attr("align", "left")
 	     $("#social").html('Views <span class="badge">' + data["popularity"] + "</span>");
