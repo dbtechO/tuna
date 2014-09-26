@@ -120,6 +120,8 @@ class Lyrics:
 				link = line[idx:line.find('\"',idx)]
 				titx = line.find("title=\"")+len("title=\"")
 				title = line[titx:line.find('"',idx)]
+
+				logging.warning(title)
 				idd = link.replace('http://www.songlyrics.com/', '')
 				output.append(
 					{'id': idd,
