@@ -119,10 +119,10 @@ class Lyrics:
 				idx = line.find("href=\"")+len("href=\"")
 				link = line[idx:line.find('\"',idx)]
 				titx = line.find("title=\"")+len("title=\"")
-				title = line[titx:line.find('"',idx)]
+				title = line[titx:line.find('"',titx)]
 
-				logging.warning(title)
 				idd = link.replace('http://www.songlyrics.com/', '')
+				idd = idd[:-1]
 				output.append(
 					{'id': idd,
 					'version': VS_NUM,
@@ -139,7 +139,6 @@ class Lyrics:
 				artdone = False
 
 			if "<! --end coltwo-center-->" in line:
-				print "break"
 				break;
 
 
@@ -171,4 +170,3 @@ class Lyrics:
 	
 #Lyrics.getLyrics("http://www.songlyrics.com/kanye-west/can-t-tell-me-nothing-lyrics/")
 #print Lyrics.search("kendrick lamar")
-print Lyrics.search("kendrick+lamar")
