@@ -65,7 +65,7 @@
     <div class = "panel-footer">Copyright DB tech 2014</div>
   </div>
 
-  <div class = "panel panel-default" id = "searchResults" style="display: none;">
+  <div class = "panel panel-default" id = "searchResults" style="opacity: 0;">
     <h2 class = "panel-heading" id="searchHeading">Search Results:</h2>
     <div class = "panel-body" id = "results">
       <ul class = "list-group" id = "resultsList">
@@ -80,20 +80,29 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
+    var previousSearch = '';
       $(document).ready(function(){
         $("#searchButton").click(function(){
           var searchbox = $('#searchbox').val();
-          if (searchbox != ""){
-            $('#searchResults').show();
-            $('#resultsList').html("")
-            $('#searchHeading').html("Search Results -"+searchbox)
-          getSearchResults()
+          if (searchbox != "" && previousSearch!=searchbox){
+            $('#searchResults').fadeTo('fast', 0, function()
+              {
+                $('#resultsList').html('');
+                $('#searchHeading').html("Search Results -"+searchbox)
+                getSearchResults(function(){
+                $('#searchResults').fadeTo('slow', 1);
+                  previousSearch = searchbox;
+                })
+              });
+           
+
           }
+          
 
         });
       });
       
-      function getSearchResults(){
+      function getSearchResults(funct){
         var searchbox = $('#searchbox').val()
         $.getJSON( "api/search?query=" + searchbox, function( data ) {
             var items = [];
@@ -111,6 +120,8 @@
               for (var i = 0; i < items.length; i++){
                 appendResults(id, items[i])
               }
+              $(id).show('slow');
+              funct();
           }
           }).always(function() {clearInterval(loading);});
       }

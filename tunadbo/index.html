@@ -74,7 +74,7 @@
            var result = '';
           for (var i = 0; i < data.length; i++) {
             var tune = data[i];
-            result+='<li class="list-group-item">'+tune['rank']+'. <a href=song?id="' +tune['id']+ '">'+tune['title']+'</a><small> by '+ tune['artist']+'</small> <span class="badge">' + tune['popularity'] + '</span></li>';
+            result+='<li class="list-group-item">'+tune['rank']+'. <a href="song?id=' +tune['id']+ '">'+tune['title']+'</a><small> by '+ tune['artist']+'</small> <span class="badge">' + tune['popularity'] + '</span></li>';
           };
           $("#topsongs").html('<br/><h2> Top Songs </h2><ol class="list-group">'+result+'</ol>').show('slow');
         });
