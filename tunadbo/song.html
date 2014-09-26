@@ -7,7 +7,8 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
+        <link href="css/bootstrap-social.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="css/styles.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -57,6 +58,7 @@
       <div class = "jumbotron">
         <h1 id = "stile"></h1>
         <p id = "sinfo" align="center"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Hold on! There are currently <span id="tunaCount">0</span> tuna in the net. </p>
+        <div id = "social" align="center"></div>
       </div>
     </div>
 
@@ -69,55 +71,7 @@
 
      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-<script type="text/JavaScript">
-      function get(name){
-         if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
-            return decodeURIComponent(name[1]);
-      }
+    <script src="client.js"></script>
 
-      function dispErr(){
-          $("#stile").html("Error 4200");
-          $("#sinfo").html("<img src='css/tuna.png' class='img-responsive' align='left'> Sorry! It looks like we can't catch any tuna right now; you may have an invalid song address. Please try again later. ");
-      }
-
-      var tunac = 0;
-
-      function tunainc(){
-        tunac++;
-        $("#tunaCount").html(tunac);
-      }
-      function getSong(){
-        var loading = setInterval(tunainc, 50); 
-
-
-        song = get('id');
-        if(song != undefined){
-          $.getJSON( "api/song?id=" + song, function( data ) {
-            var items = [];
-            if(data["id"] == "error")
-              dispErr();
-            else{
-              $.each( data, function( key, val ) {
-                items.push( "<li id='" + key + "'>" + val + "</li>" );
-              });
-             
-              $( "<ul/>", {
-                "class": "my-new-list",
-                html: items.join( "" )
-              }).appendTo( "sinfo" );
-          }
-          }).always(function() {clearInterval(loading);});
-        }
-        else{
-          dispErr();
-        }
-
-      }
-
-      window.onload = getSong();
-
-
-
-    </script>
   </body>
 </html>
