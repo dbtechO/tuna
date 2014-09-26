@@ -29,6 +29,7 @@ function getSong(){
 	     $("#sinfo").html("Hej! This song has a tuna score of  <button type ='button' class='btn btn-info'>"+data["scale"]+"</button><br/> For more info on how we caught "+ data["scale"] + " tuna, read <a href='/about'>our about page.</a>");
 	     //$("#sinfo").attr("align", "left")
 	     $("#social").html('Views <span class="badge">' + data["popularity"] + "</span>");
+	     document.title="Tuna - " + data["title"];
 	  }
 	  }).always(function() {clearInterval(loading);});
 	}
